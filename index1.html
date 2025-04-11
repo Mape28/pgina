@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercambio de Imágenes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>★ CANCHAS A EDITAR ★</h1>
+
+        <h2 class="sud_tituloo">↓↓ HAS CLICK EN LA CANCHA A EDITAR ↓↓</h2>
+        <br>
+        <br>
+    <div class="container">
+        {% set canchas_list = canchas.items()|list %}
+        {% for i in range(0, canchas_list|length, 3) %}
+        <div class="fila-canchas">
+            {% for key, cancha in canchas_list[i:i+3] %}
+            <div class="cancha">
+                <form action="/swap" method="post">
+                    <input type="hidden" name="cancha" value="{{ key }}">
+                    <img src="{{ url_for('static', filename='img/' + cancha.actual) }}" class="cancha-img">
+                    <select name="imagen">
+                        {% for opcion in cancha.opciones %}
+                        <option value="{{ opcion }}">{{ imagenes_nombres[opcion] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Intercambiar</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

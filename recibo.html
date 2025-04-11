@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='recibo.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/horas"> horas_disponibles </a></li>
+                <li><a href="/hoy_mañana"> Dias_reservas </a></li>
+                <li><a href="/bienvenida"> Reservas_deportivas</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <br>
+    <h1>★ RECIBO DE TENIS ★</h1>
+    <center>
+        <div class="contenedor-reserva">
+            {% if nombre %}
+                <h2>Reservada por: {{ nombre }}</h2>
+            {% endif %}
+
+            <h2>DIA DE SU RESERVA :</h2>
+
+            <h2>DIA: {{ weekday }} | FECHA: {{ date }}</h2>
+            <h2>Has seleccionado la: {{ court }}</h2>
+            <h2>Hora de la Reserva: {{ time }}</h2>
+        </div>
+    </center>
+    <br>
+    <form action="{{ url_for('finalizar_reserva') }}" method="post">
+        <button type="submit">Confirmar Reserva</button>
+    </form>
+    <form action="{{ url_for('index') }}" method="get">
+        <button type="submit">Cancelar Reserva</button>
+    </form>
+    
+</body>
+</html>
+

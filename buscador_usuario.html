@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>buscador usuario</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles_buscador_usuario.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/admin">Agregar US/AD</a></li>
+                <li><a href="/admin"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Panel de Administración Buscador</h1>
+    <div class="contenedor-principal">
+        <div class="contenedor-reserva">
+            <h2>Encontrar  Usuario</h2>
+            <form action="/adminn" method="post">
+                <input type="hidden" name="buscador_nombres">
+                <label for="nombre_buscar">Usuario a buscar:</label>
+                <input type="text" id="nombre_buscar" name="nombre_buscar" required>
+                <button type="submit">usuario_buscar</button>
+            </form>
+            
+            {% if usuario_encontrado %}
+                <p>Usuario encontrado:<br> Nombre: {{ usuario_encontrado }} | Cédula: {{ cedula_encontrada }}</p>
+            {% else %}
+                <p>. El usuario no existe .</p>
+            {% endif %}
+            
+        </div>
+
+        <div class="lista">
+            <form action="/diccionario" method="post">
+                
+                <ul>
+                    <P>★ USUARIOS ★</P>
+                    {% for nombre, valores in usuarios.items() %}
+                        {% if valores[1]=="usuario" %} 
+                            <li class="{% if usuario_encontrado == nombre %} resaltado {% endif %}">
+                                {{ nombre }} - {{ valores[0] }} -  {{ valores[1] }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <P>★ ADMINISTRADORES ★</P>
+                    {% for nombre, valores in usuarios.items() %}
+                        {% if valores[1]=="admin" %} 
+                            <li class="{% if usuario_encontrado == nombre %} resaltado {% endif %}">
+                                {{ nombre }} - {{ valores[0] }} -  {{ valores[1] }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    
+                </ul>    
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

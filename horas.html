@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HORAS</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles_horas.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/hoy_mañana"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <h1 id="tituloHoras">★ HORAS DISPONIBLES DE LA CANCHA ★</h1>
+    <form action="{{url_for('canchas')}}" method="get">
+        <h2 class="sud">↓↓ HAS CLICK EN LA HORA QUE DESEAS ↓↓</h2>
+
+<div class="horas-container">
+    <div class="horas-column">
+        <h3>HORAS DE LA MAÑANA</h3>
+        <button type="submit" name="time" value="6:00-7:00 am">6:00-7:00 am</button>
+        <button type="submit" name="time" value="7:00-8:00 am">7:00-8:00 am</button>
+        <button type="submit" name="time" value="8:00-9:00 am">8:00-9:00 am</button>
+        <button type="submit" name="time" value="9:00-10:00 am">9:00-10:00 am</button>
+        <button type="submit" name="time" value="10:00-11:00 am">10:00-11:00 am</button>
+        <button type="submit" name="time" value="11:00-12:00 PM">11:00-12:00 PM</button>
+    </div>
+
+    <div class="horas-column">
+        <h3>HORAS DE LA TARDE</h3>
+        <button type="submit" name="time" value="12:00-1:00 PM">12:00-1:00 PM</button>
+        <button type="submit" name="time" value="1:00-2:00 PM">1:00-2:00 PM</button>
+        <button type="submit" name="time" value="2:00-3:00 PM">2:00-3:00 PM</button>
+        <button type="submit" name="time" value="3:00-4:00 PM">3:00-4:00 PM</button>
+        <button type="submit" name="time" value="4:00-5:00 PM">4:00-5:00 PM</button>
+        <button type="submit" name="time" value="5:00-6:00 PM">5:00-6:00 PM</button>
+        <button type="submit" name="time" value="6:00-7:00 PM">6:00-7:00 PM</button>
+        <button type="submit" name="time" value="7:00-8:00 PM">7:00-8:00 PM</button>
+    </div>
+</div>
+
+</body>
+</html>

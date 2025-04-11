@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url("img/fondo_pantallaa.jpg");
+}
+
+h1 {
+    color: white;
+    font-size: 40px;
+}
+
+h2.sud_tituloo {
+    color: white;
+    font-size: 15px;
+}
+
+/* Estilos para las tarjetas que se voltean */
+.flip {
+    position: relative;  /* Hace que el contenedor sea posicionado de manera relativa para facilitar el posicionamiento de los elementos hijos. */
+    width: 15%;  /* Establece el ancho del contenedor a un 15% del contenedor principal. */
+    height: 20%;  /* Establece la altura del contenedor a un 20% del contenedor principal. */
+    perspective: 1000px; /* Añade profundidad al efecto 3D, haciendo que el volteo de la imagen se vea más realista. */
+    display: inline-block; /* Hace que el contenedor se comporte como un bloque en línea, permitiendo que otras imágenes puedan alinearse horizontalmente. */
+}
+
+.flip img {
+    width: 100%;  /* La imagen ocupa el 100% del espacio disponible dentro del contenedor flip (ancho y alto definidos en el contenedor padre). */
+    height: 100%;  /* Asegura que la altura de la imagen ocupe todo el espacio disponible en el contenedor flip. */
+    backface-visibility: hidden; /* Evita que la imagen sea visible cuando se voltea y está en la parte posterior. */
+    transition: transform 0.6s ease; /* Define una transición suave cuando se aplica la transformación en la imagen (cuando se voltea). La transición toma 0.6 segundos y tiene una aceleración uniforme (ease). */
+}
+
+.flip-back {
+    position: absolute;  /* Posiciona el div de la parte posterior de la imagen en relación al contenedor flip. */
+    top: 0;  /* Asegura que el div de la parte posterior se alinee al tope del contenedor. */
+    left: 0;  /* Asegura que el div de la parte posterior se alinee a la izquierda del contenedor. */
+    width: 100%;  /* El div de la parte posterior ocupa el 100% del espacio disponible (igual que la imagen). */
+    height: 100%;  /* El div de la parte posterior ocupa el 100% de la altura del contenedor. */
+    display: flex;  /* Utiliza el modelo flex para alinear el contenido de manera fácil y centrada. */
+    justify-content: center;  /* Centra el contenido (en este caso, el texto) horizontalmente dentro del contenedor flip-back. */
+    align-items: center;  /* Centra el contenido (en este caso, el texto) verticalmente dentro del contenedor flip-back. */
+    color: white;  /* Establece el color del texto dentro del div a blanco para que sea legible. */
+    font-weight: bold;  /* Hace el texto más grueso (negrita) para mejor visibilidad. */
+    font-size: 18px;  /* Define el tamaño de fuente del texto. */
+    background: rgba(7, 3, 3, 0.8);  /* Aplica un fondo negro semitransparente (80% de opacidad) para asegurar que el texto resalte en la parte posterior de la imagen. */
+    transform: rotateY(180deg);  /* Gira el div 180 grados a lo largo del eje Y, de modo que esté volteado de cara a la parte posterior inicialmente. */
+    backface-visibility: hidden;  /* Oculta el div flip-back cuando no está visible (cuando está volteado de cara a la parte posterior). */
+    transition: transform 0.6s ease; /* Define una transición suave para el giro del div flip-back, similar a la imagen. */
+    font-family: serif, sans-serif;
+}
+
+.flip:hover img {
+    transform: rotateY(180deg);  /* Al pasar el mouse sobre la imagen (evento hover), se voltea la imagen 180 grados en el eje Y. */
+    filter: brightness(0.5);  /* Reduce el brillo de la imagen a la mitad al pasar el mouse sobre ella para darle un efecto visual de "oscurecer". */
+}
+
+.flip:hover .flip-back {
+    transform: rotateY(0deg);  /* Cuando se pasa el mouse (evento hover), el div flip-back gira a su posición normal (0 grados), haciendo que se vea. */
+}
+
+
+/*efecto para delante para las canchas animacion*/
+.cancha-img {
+    width: 15%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s; /* Animación opcional */
+}
+
+.cancha-img:hover {
+    transform: scale(1.1); /* Ampliar ligeramente al pasar el mouse */
+}
+
+
+/*para darle estilo ala barra superior */
+/* Barra superior estilizada */
+/* Barra superior estilizada */
+header {
+    width: 100%;
+    height: 10vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.nav {
+    position: fixed; /* Mantiene la barra fija en la parte superior */
+    top: 0; /* Asegura que quede en la parte superior */
+    left: 0; /* Se expande hacia la izquierda de la ventana */
+    width: 100%; /* Cubre el ancho completo de la pantalla */
+    background: #000; /* Fondo negro */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0; /* Sin relleno para que sea compacta */
+    height: 40px; /* Barra delgada */
+    z-index: 1000; /* Prioridad más alta para que quede sobre el contenido */
+    transition: all 0.5s ease;
+}
+
+.nav.active {
+    background: #fff; /* Cambia el fondo si se activa */
+}
+
+.nav.active .logo,
+.nav.active a {
+    color: #000; /* Cambia el color del texto si se activa */
+}
+
+.nav.active a:hover {
+    background: #000; /* Fondo negro en hover */
+    color: #fff; /* Texto blanco en hover */
+}
+
+.logo {
+    font-size: 15px; /* Texto del logo más pequeño */
+    color: #fff;
+    font-weight: normal;
+    padding-left: 10px; /* Margen izquierdo */
+}
+
+.menu {
+    display: flex;
+    margin-right: 10px; /* Separación del menú a la derecha */
+}
+
+.menu li {
+    list-style: none;
+    margin: 0; /* Sin margen entre los elementos */
+}
+
+.menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 15px; /* Texto reducido */
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+}
+
+.menu li a:hover {
+    background: #fff; /* Fondo blanco en hover */
+    color: #000; /* Texto negro en hover */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+p{
+    color: white;
+    font-size: 20px;
+}

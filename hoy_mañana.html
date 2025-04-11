@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tituloBienvenida">Bienvenida</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='hoy_mañana.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/bienvenida"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <h1 class="sud_titulo"> ★ DÍAS VÁLIDOS DE RESERVA ★ </h1>
+    <form action="{{url_for('horas')}}" method="get">
+        <br>
+        <img src="{{url_for('static', filename='img/imagen_tenis3.png')}}" alt="logo" width="300" height="300">
+        <img src="{{url_for('static', filename='img/imagen_tenis.png')}}" alt="logo" width="300" height="300">
+        <img src="{{url_for('static', filename='img/imagen_tenis4.png')}}" alt="logo" width="300" height="300">
+        <br>
+        <p class="primer_p_b">↓👇 HAS CLICK EN UNO 👇↓</p>
+        <button type="submit" name="day" value="HOY">HOY</button>
+        <button type="submit" name="day" value="MAÑANA">MAÑANA</button>
+    </form>
+</body>
+</html>

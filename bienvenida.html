@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tituloBienvenida">Bienvenida</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles_bienvenida.css')}}">
+</head>
+<body>  
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/mis_reservas"> Mis_reservas </a></li>
+                <li><a href="/"> Volver </a></li>     
+            </ul>
+        </nav>
+    </header>
+    {% if nombre %} 
+        <h2 class="bienvenida ">BIENVENID@ ' {{ nombre }} ' AL AREÁ DE RESERVAS </h2>
+    {% endif %}
+    <img src="{{url_for('static', filename='img/logo_colombia.png')}}" alt="logo" width="300" height="300">
+    <br>
+    <h1 class="sud_titulo">★ RESERVAS DEPORTIVAS ★</h1>
+    <form action="{{url_for('hoy_mañana')}}" method="get">
+        <h2 class="primer_p_b">↓👇 HAS CLICK EN UNO 👇↓</h2>
+        <button type="submit">TENIS</button>
+    </form>
+</body>
+</html>

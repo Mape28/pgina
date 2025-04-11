@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador Usuario</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles_buscador_usuario.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/admin"> Volver </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Panel de Administración Buscador</h1>
+    <div class="contenedor-principal">
+        <div class="contenedor-reserva">
+            <h2>Encontrar Usuario o Administrador</h2>
+            <form action="/adminn" method="post">
+                <input type="hidden" name="buscador_nombres">
+                <label for="nombre_buscar">Nombre a buscar:</label>
+                <input type="text" id="nombre_buscar" name="nombre_buscar" required>
+                <button type="submit">Buscar</button>
+            </form>
+            
+            {% if usuario_encontrado %}
+                <p>Usuario encontrado:<br> Nombre: {{ usuario_encontrado }} | Cédula: {{ cedula_encontrada }}</p>
+            {% elif admin_encontrado %}
+                <p>Administrador encontrado:<br> Nombre: {{ admin_encontrado }} | Cédula: {{ admin_cedula_encontrada }}</p>
+            {% else %}
+                <p>. No se encontró el usuario o administrador .</p>
+            {% endif %}
+        </div>
+
+        <div class="lista">
+            <ul>
+                <p>★ USUARIOS ★</p>
+                {% for nombre, cedula in usuarios.items() %}
+                <li class="{% if usuario_encontrado == nombre %} resaltado {% endif %}">
+                    {{ nombre }} - {{ cedula }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="lista">
+        <ul>
+            <p>★ ADMINISTRADORES ★</p>
+            {% for nombre, cedula in administradores.items() %}
+            <li class="{% if admin_encontrado == nombre %} resaltado {% endif %}">
+                {{ nombre }} - {{ cedula }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

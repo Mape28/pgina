@@ -1,0 +1,146 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-image: url("img/fondo_pantallaa.jpg");
+    background-size: cover;
+}
+
+h1 {
+    color: white;
+    font-size: 40px;
+    font-family: serif, sans-serif;
+}
+
+h2.sud_tituloo {
+    color: white;
+    font-size: 20px;
+    font-family: serif, sans-serif;
+}
+
+/* Estilos para los botones */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px; /* Ajusta el margen entre los botones */
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fila-canchas {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    
+}
+
+.cancha {
+    text-align: center;
+    border-radius: 10px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
+    backdrop-filter: blur(10px); /* Efecto borroso */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cancha-img {
+    width: 250px; /*tamaño del contenedor  de cada imagen*/
+    height: auto;
+    border-radius: 10px;
+}
+
+select, button {
+    display: block;
+    margin: 10px auto;
+}
+
+
+
+/*para darle estilo ala barra superior */
+/* Barra superior estilizada */
+/* Barra superior estilizada */
+header {
+    width: 100%;
+    height: 10vh;
+    background-size: cover;
+    background-position: center;
+
+}
+
+
+.nav {
+    position: fixed; /* Mantiene la barra fija en la parte superior */
+    top: 0; /* Asegura que quede en la parte superior */
+    left: 0; /* Se expande hacia la izquierda de la ventana */
+    width: 100%; /* Cubre el ancho completo de la pantalla */
+    background: #000; /* Fondo negro */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0; /* Sin relleno para que sea compacta */
+    height: 40px; /* Barra delgada */
+    z-index: 1000; /* Prioridad más alta para que quede sobre el contenido */
+    transition: all 0.5s ease;
+}
+
+.nav.active {
+    background: #fff; /* Cambia el fondo si se activa */
+}
+
+.nav.active .logo,
+.nav.active a {
+    color: #000; /* Cambia el color del texto si se activa */
+}
+
+.nav.active a:hover {
+    background: #000; /* Fondo negro en hover */
+    color: #fff; /* Texto blanco en hover */
+}
+
+.logo {
+    font-size: 15px; /* Texto del logo más pequeño */
+    color: #fff;
+    font-weight: normal;
+    padding-left: 10px; /* Margen izquierdo */
+}
+
+.menu {
+    display: flex;
+    margin-right: 20px; /* Separación del menú a la derecha */
+}
+
+.menu li {
+    list-style: none;
+    margin: 0; /* Sin margen entre los elementos */
+}
+
+.menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 15px; /* Texto reducido */
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+}
+
+.menu li a:hover {
+    background: #fff; /* Fondo blanco en hover */
+    color: #000; /* Texto negro en hover */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+p{
+    color: white;
+    font-size: 20px;
+}
+
+
+

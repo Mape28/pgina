@@ -1,0 +1,318 @@
+esta es mi hoja de flask 'from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
+from flask_migrate import Migrate
+import os
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Necesario para usar sesiones
+
+
+# Configurar la base de datos SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reservas.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# Modelo para los usuarios
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), unique=True, nullable=False)
+    cedula = db.Column(db.String(20), unique=True, nullable=False)
+    rol = db.Column(db.String(20), nullable=False, default="usuario") 
+
+# Modelo para las reservas
+class Reserva(db.Model):
+
+    
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    cancha = db.Column(db.String(20), nullable=False)
+    fecha = db.Column(db.String(20), nullable=False)
+    hora = db.Column(db.String(20), nullable=False)
+    reservado_por = db.Column(db.String(100), nullable=False)
+
+with app.app_context():
+    db.create_all()
+
+    # Verificar si el administrador ya existe
+    admin = Usuario.query.filter_by(nombre="Stiven").first()
+    
+    if not admin:
+        nuevo_admin = Usuario(nombre="Stiven", cedula="2", rol="admin")
+        db.session.add(nuevo_admin)
+        db.session.commit()
+        print("Administrador creado correctamente.")
+
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+@app.route('/bienvenida')
+def bienvenida():
+    nombre = session.get('nombre')
+    return render_template('bienvenida.html', nombre=nombre)
+
+
+@app.route('/verificar_contraseña', methods=['POST'])
+def verificar_contraseña():
+    contraseña = request.form['contraseña']
+    usuario = Usuario.query.filter_by(cedula=contraseña).first()
+    
+    if usuario:
+        session['nombre'] = usuario.nombre
+        flash(f'Bienvenido, {usuario.nombre}!', 'success')
+        if usuario.rol == 'admin':  # ✅ Ahora verificamos el rol
+            return redirect(url_for('admin'))
+        return redirect(url_for('bienvenida'))
+    
+    return render_template('index.html', notificacion='incorrecto')
+
+
+@app.route('/hoy_mañana', methods=['GET'])
+def hoy_mañana():
+    return render_template('hoy_mañana.html')
+
+#esto es para que el adminsitrador pueda reservar canchas desde su interfass
+@app.route('/usuarios')
+def usuarios():
+    return render_template('hoy_mañana.html')
+
+@app.route('/informe_reservas')
+def informe_reservas():
+    return render_template('informe_reservas.html')
+
+
+
+@app.route('/horas', methods=['GET'])
+def horas():
+    selected_day = request.args.get('day')
+    if selected_day:
+        session['day'] = selected_day
+        hoy = datetime.now()
+        dias_semana_espanol = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+        if selected_day == 'HOY':
+            session['date'] = hoy.strftime('%d/%m/%Y')
+            session['weekday'] = dias_semana_espanol[hoy.weekday()]
+        elif selected_day == 'MAÑANA':
+            manana = hoy + timedelta(days=1)
+            session['date'] = manana.strftime('%d/%m/%Y')
+            session['weekday'] = dias_semana_espanol[manana.weekday()]
+    return render_template('horas.html')
+
+@app.route('/canchas', methods=['GET'])
+def canchas():
+    selected_time = request.args.get('time')
+    if selected_time:
+        session['time'] = selected_time
+    
+    day = session.get('day', 'default_day')  # Asegura que siempre haya un valor por defecto
+    time = session.get('time', 'default_time')
+    
+    # Obtener todas las reservas para el día y la hora seleccionados
+    reservas = Reserva.query.filter_by(fecha=session.get('date'), hora=selected_time).all()
+    
+    # Inicializar el estado de las canchas como disponibles
+    canchas_estado = {
+        f'cancha{i}': {'estado': 'disponible', 'reservado_por': None} for i in range(1, 7)
+    }
+    
+    # Actualizar el estado con las reservas existentes
+    for reserva in reservas:
+        canchas_estado[reserva.cancha]['estado'] = 'reservado'
+        canchas_estado[reserva.cancha]['reservado_por'] = reserva.reservado_por
+    
+    return render_template('canchass.html', day=day, time=time, canchas_estado=canchas_estado)
+
+@app.route('/recibo', methods=['GET'])
+def recibo():
+    selected_court = request.args.get('court')
+    if selected_court:
+        session['court'] = selected_court
+    return render_template('recibo.html', nombre=session.get('nombre'), day=session.get('day'), time=session.get('time'), court=session.get('court'), date=session.get('date'), weekday=session.get('weekday'))
+
+@app.route('/finalizar_reserva', methods=['POST'])
+def finalizar_reserva():
+    if 'nombre' not in session:
+        return redirect(url_for('index'))
+    
+    usuario = Usuario.query.filter_by(nombre=session['nombre']).first()
+    cancha = session.get('court')
+    fecha = session.get('date')
+    hora = session.get('time')
+    
+    if Reserva.query.filter_by(cancha=cancha, fecha=fecha, hora=hora).first():
+        flash('Esa cancha ya está reservada.', 'error')
+    else:
+        nueva_reserva = Reserva(usuario_id=usuario.id, cancha=cancha, fecha=fecha, hora=hora, reservado_por=usuario.nombre)
+        db.session.add(nueva_reserva)
+        db.session.commit()
+        flash('Reserva realizada con éxito!', 'success')
+    return redirect(url_for('index'))
+
+
+#esto es para agregar usuarios y administradores y los elimino
+@app.route('/admin', methods=['GET', 'POST']) 
+def admin():
+    usuario_actual = session.get('nombre')
+    admin_usuario = Usuario.query.filter_by(nombre=usuario_actual, rol="admin").first()
+    
+    if not admin_usuario:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        if 'add_user' in request.form:
+            nuevo_nombre = request.form['nombre']
+            nueva_cedula = request.form['cedula']
+            if nuevo_nombre and nueva_cedula:
+                nuevo_usuario = Usuario(nombre=nuevo_nombre, cedula=nueva_cedula, rol="usuario")
+                db.session.add(nuevo_usuario)
+                db.session.commit()
+                flash(f'Usuario {nuevo_nombre} agregado con éxito.', 'success')
+            else:
+                flash('Por favor, completa todos los campos.', 'error')
+        
+        elif 'delete_user' in request.form:
+            nombre_a_eliminar = request.form['nombre_a_eliminar'].strip()
+            usuario = Usuario.query.filter_by(nombre=nombre_a_eliminar, rol="usuario").first()
+            if usuario:
+                db.session.delete(usuario)
+                db.session.commit()
+                flash(f'Usuario {usuario.nombre} eliminado con éxito.', 'success')
+            else:
+                flash('El usuario no existe.', 'error')
+        
+        elif 'add_admin' in request.form:
+            nuevo_admin = request.form['admin_nombre']
+            admin_cedula = request.form['admin_cedula']
+            if nuevo_admin and admin_cedula:
+                nuevo_administrador = Usuario(nombre=nuevo_admin, cedula=admin_cedula, rol="admin")
+                db.session.add(nuevo_administrador)
+                db.session.commit()
+                flash(f'Administrador {nuevo_admin} agregado con éxito.', 'success')
+            else:
+                flash('Por favor, completa todos los campos.', 'error')
+        
+        elif 'delete_admin' in request.form:
+            admin_a_eliminar = request.form['admin_a_eliminar'].strip()
+            administrador = Usuario.query.filter_by(nombre=admin_a_eliminar, rol="admin").first()
+            if administrador:
+                db.session.delete(administrador)
+                db.session.commit()
+                flash(f'Administrador {administrador.nombre} eliminado con éxito.', 'success')
+            else:
+                flash('El administrador no existe.', 'error')
+    
+    usuarios = Usuario.query.filter_by(rol="usuario").all()
+    administradores = Usuario.query.filter_by(rol="admin").all()
+    return render_template('admin.html', usuarios=usuarios, administradores=administradores)
+
+
+#esto es para el buscador de usuarios y poder buscalos sin inportar mayusculas ni minusculas 
+@app.route("/adminn", methods=["GET", "POST"])
+def adminn():
+    usuario_encontrado = None
+    cedula_encontrada = None
+    usuario_buscar = None
+
+    # Obtener usuarios desde la base de datos
+    usuarios_db = Usuario.query.all()
+
+    # Convertir usuarios en diccionario {nombre: cedula}
+    nombres_identificaciones = {usuario.nombre.lower(): [usuario.cedula, usuario.rol] for usuario in usuarios_db}
+
+    if request.method == "POST" and "buscador_nombres" in request.form:
+        usuario_buscar = request.form.get("nombre_buscar", "").strip().lower()
+
+        # Buscar ignorando mayúsculas y minúsculas
+        if usuario_buscar in nombres_identificaciones:
+            usuario_encontrado = usuario_buscar
+            cedula_encontrada = nombres_identificaciones[usuario_buscar][0]
+        else:
+            flash("El usuario no está en la lista.", "error")
+
+    return render_template("buscador_usuario.html", 
+                        usuario_encontrado=usuario_encontrado, 
+                        cedula_encontrada=cedula_encontrada, 
+                        usuario_buscar=usuario_buscar, 
+                        usuarios=nombres_identificaciones)
+
+
+## esto es para redireccionarlo ala hoja de mis reervas y  ver las reservas que a echo cada usuario y las pueda cancelar 
+@app.route('/mis_reservas')
+def mis_reservas():
+    if 'nombre' not in session:
+        return redirect(url_for('index'))
+    
+    usuario = Usuario.query.filter_by(nombre=session['nombre']).first()
+    reservas = Reserva.query.filter_by(usuario_id=usuario.id).all()
+    
+    return render_template('Mis_reservas.html', reservas=reservas)
+
+@app.route('/cancelar_reserva/<int:reserva_id>', methods=['POST'])
+def cancelar_reserva(reserva_id):
+    reserva = Reserva.query.get(reserva_id)
+    
+    if reserva:
+        # Verificar que el usuario solo pueda cancelar antes de la hora reservada
+        hora_actual = datetime.now().strftime("%H:%M")
+        if hora_actual < reserva.hora:
+            db.session.delete(reserva)
+            db.session.commit()
+            flash("Reserva cancelada con éxito.", "success")
+        else:
+            flash("No puedes cancelar la reserva después de la hora reservada.", "error")
+    
+    return redirect(url_for('mis_reservas'))
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+' y esta es mi hoja de html se llama informe_reservas.html '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='informe_reservas.css')}}">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">Informe / Reservas</div>
+            <ul class="menu">
+                <li><a href="/admin"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <h1>informe reservas</h1>
+</body>
+</html> '  , lo que quiero que pongas una entrada para escribir una correo el que queramos y tambien quiero dos entradas para escribir la
+fecha inicial y en la otra poder ecribir la fecha limite y si no quiero es quecribir que en esa misma entrada para la inicial y la final hay como una flechita para que me despligue 
+un dicionario  para escoger la hora desde hay  para la inicial y la final y abajo un boton para que me envie esta infomacion al correo 
+, todo esto va ser para poder imprimir la base de datos su tabla con todo la informcion desde esa fecha inicial hasta la fecha final , y tienes que tener en cuenta de poderle decir abajo de ese boton final 
+de enviar esa tabla al correo como pdf   un mensaje que diga que solo tenemos informacion de base de datos y revisas la base de datos y le dices 
+que tenemos informacion de la fecha que comensamos almacenar la base datos hasta lo ultimo si no esta dentro de ese fecha no podemos enviarle la informacion , y quiero un css para eso  que se vea bien profesional 
+
+
+
+
+
+
+
+
+
+
+
+imtenis.png.jpg
+imtenis1.png.jpg
+imtenis2.png.jpg
+imtenis3.png.jpg
+imtenis4.png.jpg
+imtenis5.png.jpg
+
+
+logo_sin_fondo.png

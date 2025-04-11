@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url("img/fondo_pantallaa.jpg");
+}
+
+
+h1 {
+    font-family: serif, sans-serif;
+    color: white;
+    font-size: 50px;
+}
+
+/*contenedor del recibo y para poner la imagen borrosa en el fondo */
+
+.reserva {
+    position: relative; /* Necesario para el pseudo-elemento */
+    border: 4px solid white; /* Borde sólido blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    width: 400px; /* Ancho del contenedor */
+    height: 220px; /* Altura del contenedor */
+    color: white; /* Color del texto dentro del contenedor */
+    text-align: center; /* Alineación del texto */
+    overflow: hidden; /* Oculta el pseudo-elemento fuera del contenedor */
+}
+/*para poner el fondo borroso*/
+
+.reserva::before {
+    content: ''; /* Contenido vacío para el pseudo-elemento */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('img/fondo_pantallaa.jpg'); /* Imagen de fondo */
+    background-size: cover; /* La imagen cubrirá todo el área */
+    background-repeat: no-repeat; /* Evitar que la imagen se repita */
+    background-position: center; /* Centrar la imagen */
+    filter: blur(5px); /* Aplicar desenfoque */
+    z-index: -1; /* Colocar detrás del contenido del contenedor */
+}
+
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px; /* Ajusta el margen entre los botones */
+}
+
+
+
+
+/*para darle estilo ala barra superior */
+/* Barra superior estilizada */
+/* Barra superior estilizada */
+header {
+    width: 100%;
+    height: 10vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.nav {
+    position: fixed; /* Mantiene la barra fija en la parte superior */
+    top: 0; /* Asegura que quede en la parte superior */
+    left: 0; /* Se expande hacia la izquierda de la ventana */
+    width: 100%; /* Cubre el ancho completo de la pantalla */
+    background: #000; /* Fondo negro */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0; /* Sin relleno para que sea compacta */
+    height: 40px; /* Barra delgada */
+    z-index: 1000; /* Prioridad más alta para que quede sobre el contenido */
+    transition: all 0.5s ease;
+}
+
+.nav.active {
+    background: #fff; /* Cambia el fondo si se activa */
+}
+
+.nav.active .logo,
+.nav.active a {
+    color: #000; /* Cambia el color del texto si se activa */
+}
+
+.nav.active a:hover {
+    background: #000; /* Fondo negro en hover */
+    color: #fff; /* Texto blanco en hover */
+}
+
+.logo {
+    font-size: 15px; /* Texto del logo más pequeño */
+    color: #fff;
+    font-weight: normal;
+    padding-left: 10px; /* Margen izquierdo */
+}
+
+.menu {
+    display: flex;
+    margin-right: 10px; /* Separación del menú a la derecha */
+}
+
+.menu li {
+    list-style: none;
+    margin: 0; /* Sin margen entre los elementos */
+}
+
+.menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 15px; /* Texto reducido */
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+}
+
+.menu li a:hover {
+    background: #fff; /* Fondo blanco en hover */
+    color: #000; /* Texto negro en hover */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+p{
+    color: white;
+    font-size: 20px;
+}
+
+/*para que la horas se alinien horizontalmente */
+.horas-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px; /* Espaciado entre las columnas */
+    margin-top: 20px;
+}
+
+.horas-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.horas-column button {
+    margin-bottom: 10px; /* Espaciado entre botones */
+}

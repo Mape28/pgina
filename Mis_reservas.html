@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='mis_reservas.css')}}">
+    <title>Mis Reservas</title>
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/bienvenida"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <h1>Mis Reservas</h1>
+    {% for reserva in reservas %}
+    <center>
+        <div class="reserva">
+                <h2>Reservada por: {{ reserva.reservado_por }}</h2>
+                <h3>Día: {{ reserva.fecha }} </h3>
+                <h3> Hora: {{ reserva.hora }}</h3>
+                <h3>Cancha: {{ reserva.cancha }}</h3>
+
+            <form action="{{ url_for('cancelar_reserva', reserva_id=reserva.id) }}" method="post">
+                <button type="submit">Cancelar Reserva</button>
+            </form>
+        </div>
+    </center>
+    {% endfor %}
+</body>
+</html>

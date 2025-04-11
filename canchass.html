@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANCHAS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_canchass.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">BUSCADOR   / USUARIO</div>
+            <ul class="menu">
+                <li><a href="/horas"> Volver </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <center>
+        <br>
+        <h1>★ CANCHAS DISPONIBLES ★</h1>
+        <h2 class="sud_tituloo">↓↓ HAZ CLICK EN LA CANCHA QUE DESEAS ↓↓</h2>
+        <br><br>
+
+        <section class="botones_canchas">
+            {% for i in range(1, 7, 2) %}  {# Avanza de 2 en 2 para agrupar por filas #}
+            <div class="button-group">
+                {% for j in range(i, i + 2) %}
+                    {% if j <= 6 %}  {# Evita exceder las 6 canchas #}
+                        {% set cancha = "cancha" ~ j %}
+        
+                        {% if canchas_estado[cancha]['estado'] == 'disponible' %}
+                            <a href="{{ url_for('recibo', court=cancha) }}">
+                                <img src="{{ url_for('static', filename='img/imagen_' ~ cancha ~ '.png') }}" class="cancha-img">
+                            </a>
+                        {% else %}
+                            <div class="flip">
+                                <img src="{{ url_for('static', filename='img/reservaa_cancha.png') }}" class="cancha-img">
+                                {% if canchas_estado[cancha]['reservado_por'] %}
+                                <div class="flip-back">
+                                    {{ cancha|upper }} <br>
+                                    Reservado por: {{ canchas_estado[cancha]['reservado_por'] }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </section>
+        
+    </center>
+</body>
+</html>
+

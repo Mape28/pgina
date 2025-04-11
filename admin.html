@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles_admin.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <div class="logo">INICIO</div>
+            <ul class="menu">
+                <li><a href="/horas">Reservar_canchas</a></li>
+                <li><a href="/adminn">Buscador de usuario</a></li>
+                <li><a href="/usuarios">Reservas usuarios</a></li>
+                <li><a href="/informe_reservas">Reporte</a></li>
+                <li><a href="/">Volver al inicio</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <h1>Panel de Administración</h1>
+    <center>
+        <div class="contenedor-reserva">
+            <h2>Agregar Usuario</h2>
+            <form action="/admin" method="post">
+                <input type="hidden" name="add_user">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" required>
+                <button type="submit">Agregar Usuario</button>
+            </form>
+            <h2>Eliminar Usuario</h2>
+            <form action="/admin" method="post">
+                <input type="hidden" name="delete_user">
+                <label for="nombre_a_eliminar">Nombre:</label>
+                <input type="text" id="nombre_a_eliminar" name="nombre_a_eliminar" required>
+                <button type="submit">Eliminar Usuario</button>
+            </form>
+            <h2>Agregar Administrador</h2>
+            <form action="/admin" method="post">
+                <input type="hidden" name="add_admin">
+                <label for="admin_nombre">Nombre:</label>
+                <input type="text" id="admin_nombre" name="admin_nombre" required>
+                <label for="admin_cedula">Cédula:</label>
+                <input type="text" id="admin_cedula" name="admin_cedula" required>
+                <button type="submit">Agregar Administrador</button>
+            </form>
+            
+            <h2>Eliminar Administrador</h2>
+            <form action="/admin" method="post">
+                <input type="hidden" name="delete_admin">
+                <label for="admin_a_eliminar">Nombre:</label>
+                <input type="text" id="admin_a_eliminar" name="admin_a_eliminar" required>
+                <button type="submit">Eliminar Administrador</button>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+    </center>
+</body>
+</html>

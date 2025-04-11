@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Sección de inicio de sesión -->
+        <div class="login-section">
+            <div class="header">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo del Club">
+                <h1> BIENVENIDO AL CLUB TENIS </h1>
+            </div>
+            <div class="separator"></div>
+            <form action="/verificar_contraseña" method="post">
+                <h2 class="titulo">Verificación de Acción</h2>
+                <p class="primer_p">Introduce tu acción:</p>
+                <input type="password" id="contraseña" name="contraseña" autocomplete="off">
+                <button id="verificarBtn">Iniciar sesión</button>
+            </form>
+            {% if notificacion %}
+                <p id="error-msg">Contraseña incorrecta</p>
+            {% endif %}
+        </div>
+
+        <!-- Sección de imágenes -->
+        <div class="image-section">
+            <img id="imagen-cambio" src="{{ url_for('static', filename='img/imtenis5.png') }}" alt="Imagen dinámica">
+        </div>
+    </div>
+
+    <!-- Logo en la esquina superior derecha -->
+    <img class="logo-top-right" src="{{ url_for('static', filename='img/logo_sin_fondo.png') }}" alt="Logo del Club">
+
+    <script>
+        let imagenes = [
+            "{{ url_for('static', filename='img/imtenis.png') }}",
+            "{{ url_for('static', filename='img/imtenis1.png') }}",
+            "{{ url_for('static', filename='img/imtenis2.png') }}",
+            "{{ url_for('static', filename='img/imtenis.png') }}",
+            "{{ url_for('static', filename='img/imtenis5.png') }}"
+        ];
+        
+        let index = 0;
+        setInterval(() => {
+            index = (index + 1) % imagenes.length;
+            document.getElementById("imagen-cambio").src = imagenes[index]; 
+        }, 3000); // Ajusta el tiempo aquí (5000 = 5 segundos, 3000 = 3 segundos, etc.)
+    </script>
+</body>
+</html>
